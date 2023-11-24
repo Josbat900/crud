@@ -1,21 +1,31 @@
 const express = require("express")
 const app = express();
 const PORT = 3000
+require("dotenv").config();
  
 app.use(express.json());
 
 const { Pool } = require('pg');
+/*
 const pool = new Pool({
-    user: 'default',
-    host: 'ep-orange-smoke-08960365.us-east-1.postgres.vercel-storage.com',
-    database: 'verceldb',
-    password: 'bf3BTmnKYd4P',
-    port: 5432,
-    ssl: {rejectUnauthorized: false}
-});
+    connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+  })
+*/
+ const pool = new Pool({
+     user: 'default',
+     host: 'ep-steep-brook-50699158-pooler.us-east-1.postgres.vercel-storage.com',
+     database: 'verceldb',
+     password: 'srXfylHn4jC9',
+     port: 5432,
+     ssl: {rejectUnauthorized: false}
+ });
 
 const listUsersQuery = `SELECT * FROM students;`;
 
+
+//importando la middleware
+const authMiddleware = require("./apikey")
+app.use(authMiddleware)
 
 app.get("/prueba", (req,res)=>{
     res.send("the port is running")
@@ -170,3 +180,5 @@ app.delete("/students/delete/:id", (req,res)=>{
 })
 
 app.listen(PORT, ()=>{console.log("the app is running")})
+
+module.exports = app
